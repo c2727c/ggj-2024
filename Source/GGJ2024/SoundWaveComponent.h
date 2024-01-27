@@ -17,6 +17,9 @@ public:
 	USoundWaveComponent();
 	UFUNCTION(BlueprintCallable)
 	void EmitOneSoundWave();
+	void EmitOneSoundWaveTimed();
+	UFUNCTION(BlueprintCallable)
+	void EmitSomeSoundWaves();
 
 protected:
 	// Called when the game starts
@@ -27,6 +30,10 @@ public:
     TSubclassOf<AActor> BP_SoundWaveClass;	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+private:
+    FTimerHandle SoundWaveTimerHandle;
+    int32 SoundWaveCounter;
 
 		
 };

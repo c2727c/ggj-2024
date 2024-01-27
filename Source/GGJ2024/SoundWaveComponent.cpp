@@ -25,8 +25,24 @@ void USoundWaveComponent::EmitOneSoundWave()
 		FVector SpawnLocation = GetOwner()->GetActorLocation();
 		FRotator SpawnRotation = FRotator(0.0f, 0.0f, 0.0f); // P(Y-axis),Y(X-axis),R(Z-axis)
 		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(BP_SoundWaveClass, SpawnLocation, SpawnRotation, SpawnParams);
-
 	}
+}
+
+void USoundWaveComponent::EmitOneSoundWaveTimed()
+{
+	EmitOneSoundWave();
+	SoundWaveCounter++;
+	if(SoundWaveCounter >= 10)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(SoundWaveTimerHandle);
+	}
+}
+
+void USoundWaveComponent::EmitSomeSoundWaves()
+{
+	SoundWaveCounter = 0;
+	float Interval = 0.5f;
+	GetWorld()->GetTimerManager().SetTimer(SoundWaveTimerHandle, this, &USoundWaveComponent::EmitOneSoundWave, Interval, true);
 }
 
 // Called when the game starts
