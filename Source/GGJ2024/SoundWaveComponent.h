@@ -30,6 +30,8 @@ protected:
 public:
 	UPROPERTY(EditAnywhere)
     TSubclassOf<AActor> BP_SoundWaveClass;
+	UPROPERTY(EditAnywhere)
+	float SpawnPointOffsetZ = -21.0f;
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 

@@ -22,7 +22,8 @@ void USoundWaveComponent::EmitOneSoundWave()
 		SpawnParams.Owner = GetOwner();
 		SpawnParams.Instigator = GetOwner()->GetInstigator();
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		FVector SpawnLocation = GetOwner()->GetActorLocation();
+		// Actor location + SpawnPointOffsetZ
+		FVector SpawnLocation = GetOwner()->GetActorLocation() + FVector(0.0f, 0.0f, SpawnPointOffsetZ);
 		FRotator SpawnRotation = FRotator(0.0f, EmitRotationY, 0.0f); // P(Y-axis),Y(X-axis),R(Z-axis)
 		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(BP_SoundWaveClass, SpawnLocation, SpawnRotation, SpawnParams);
 	}
