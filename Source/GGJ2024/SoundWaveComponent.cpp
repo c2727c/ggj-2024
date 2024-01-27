@@ -50,6 +50,53 @@ void USoundWaveComponent::EmitWavesStop()
 	GetWorld()->GetTimerManager().ClearTimer(SoundWaveTimerHandle);
 }
 
+void USoundWaveComponent::EmitOneSmallWave(FVector TargetLocation, FVector SpawnLoationOffset)
+{
+	// spawn my BP_SoundWave actor
+    if(BP_SoundWaveClass)
+    {
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = GetOwner();
+		SpawnParams.Instigator = GetOwner()->GetInstigator();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+		// Actor location + SpawnPointOffsetZ
+		FVector SpawnLocation = GetOwner()->GetActorLocation() + SpawnLoationOffset;
+		FVector Direction = TargetLocation - SpawnLocation;
+		Direction.Normalize();
+		FRotator SpawnRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(BP_SoundWaveClass, SpawnLocation, SpawnRotation, SpawnParams);
+        if (SpawnedActorRef)
+        {
+            // Set the scale of the spawned actor
+            SpawnedActorRef->SetActorScale3D(FVector(0.2f, 0.2f, 1.0f));
+        }
+	}
+}
+
+void USoundWaveComponent::EmitOneSmallWaveTimed()
+{
+	FVector Offsets[3] = {FVector(0.0f, 0.0f, 0.0f), FVector(-50.0f, 0.0f, 50.0f ), FVector(50.0f, 0.0f, 80.0f )};
+	if (SmallWaveCounter < 3)
+	{
+		EmitOneSmallWave(SmallWaveTargetLocation, Offsets[SmallWaveCounter]);
+		SmallWaveCounter++;
+		GetWorld()->GetTimerManager().SetTimer(SoundWaveTimerHandle, this, &USoundWaveComponent::EmitOneSmallWaveTimed,SmallWaveInterval, false);
+	}
+	else
+	{
+		GetWorld()->GetTimerManager().ClearTimer(SoundWaveTimerHandle);
+	}
+}
+
+void USoundWaveComponent::SmallWavesAttack(FVector TargetLocation, float Interval)
+{
+	//shoots a series of small sound waves to a target
+	SmallWaveCounter = 0;
+	SmallWaveTargetLocation = TargetLocation;
+	SmallWaveInterval = Interval;
+	EmitOneSmallWaveTimed();
+}
+
 // Called when the game starts
 void USoundWaveComponent::BeginPlay()
 {

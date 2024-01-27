@@ -23,6 +23,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EmitWavesStop();
 
+	//
+	UFUNCTION(BlueprintCallable)
+	void EmitOneSmallWave(FVector TargetLocation, FVector SpawnLoationOffset);
+	void EmitOneSmallWaveTimed();
+	UFUNCTION(BlueprintCallable)
+	void SmallWavesAttack(FVector TargetLocation, float Interval= 0.06f);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -37,7 +44,11 @@ public:
 
 private:
     FTimerHandle SoundWaveTimerHandle;
-    int32 SoundWaveCounter;
+	//
+    int32 SmallWaveCounter;
+	FVector SmallWaveTargetLocation;
+	float SmallWaveInterval;
+	//
 	float EmitRotationY = 0.0f;
 	float EmitRotationYDelta = 0.0f; // degree per second
 	float EmitInterval = 0.5f;
