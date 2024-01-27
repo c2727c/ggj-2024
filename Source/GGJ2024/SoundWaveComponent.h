@@ -19,7 +19,9 @@ public:
 	void EmitOneSoundWave();
 	void EmitOneSoundWaveTimed();
 	UFUNCTION(BlueprintCallable)
-	void EmitSomeSoundWaves();
+	void EmitWavesStart(float Interval = 0.5f, float InitialRotationY = 90.0f, float DeltaRotationY = 1.0f);
+	UFUNCTION(BlueprintCallable)
+	void EmitWavesStop();
 
 protected:
 	// Called when the game starts
@@ -27,13 +29,16 @@ protected:
 
 public:
 	UPROPERTY(EditAnywhere)
-    TSubclassOf<AActor> BP_SoundWaveClass;	
+    TSubclassOf<AActor> BP_SoundWaveClass;
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
     FTimerHandle SoundWaveTimerHandle;
     int32 SoundWaveCounter;
+	float EmitRotationY = 0.0f;
+	float EmitRotationYDelta = 0.0f; // degree per second
+	float EmitInterval = 0.5f;
 
 		
 };

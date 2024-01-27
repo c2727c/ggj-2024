@@ -23,7 +23,7 @@ void USoundWaveComponent::EmitOneSoundWave()
 		SpawnParams.Instigator = GetOwner()->GetInstigator();
 		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 		FVector SpawnLocation = GetOwner()->GetActorLocation();
-		FRotator SpawnRotation = FRotator(0.0f, 0.0f, 0.0f); // P(Y-axis),Y(X-axis),R(Z-axis)
+		FRotator SpawnRotation = FRotator(0.0f, EmitRotationY, 0.0f); // P(Y-axis),Y(X-axis),R(Z-axis)
 		AActor* SpawnedActorRef = GetWorld()->SpawnActor<AActor>(BP_SoundWaveClass, SpawnLocation, SpawnRotation, SpawnParams);
 	}
 }
@@ -31,18 +31,22 @@ void USoundWaveComponent::EmitOneSoundWave()
 void USoundWaveComponent::EmitOneSoundWaveTimed()
 {
 	EmitOneSoundWave();
-	SoundWaveCounter++;
-	if(SoundWaveCounter >= 10)
-	{
-		GetWorld()->GetTimerManager().ClearTimer(SoundWaveTimerHandle);
-	}
+	EmitRotationY += EmitRotationYDelta * EmitInterval;
 }
 
-void USoundWaveComponent::EmitSomeSoundWaves()
+// Initial rotation
+// Delta rotation
+void USoundWaveComponent::EmitWavesStart(float Interval, float InitialRotationY, float DeltaRotationY)
 {
-	SoundWaveCounter = 0;
-	float Interval = 0.5f;
-	GetWorld()->GetTimerManager().SetTimer(SoundWaveTimerHandle, this, &USoundWaveComponent::EmitOneSoundWave, Interval, true);
+	EmitRotationY = InitialRotationY;
+	EmitInterval = Interval;
+	EmitRotationYDelta = DeltaRotationY;
+	GetWorld()->GetTimerManager().SetTimer(SoundWaveTimerHandle, this, &USoundWaveComponent::EmitOneSoundWaveTimed, Interval, true);
+}
+
+void USoundWaveComponent::EmitWavesStop()
+{
+	GetWorld()->GetTimerManager().ClearTimer(SoundWaveTimerHandle);
 }
 
 // Called when the game starts
