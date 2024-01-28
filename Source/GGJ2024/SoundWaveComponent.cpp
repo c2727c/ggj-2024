@@ -68,14 +68,15 @@ void USoundWaveComponent::EmitOneSmallWave(FVector TargetLocation, FVector Spawn
         if (SpawnedActorRef)
         {
             // Set the scale of the spawned actor
-            SpawnedActorRef->SetActorScale3D(FVector(0.2f, 0.2f, 1.0f));
+            SpawnedActorRef->SetActorScale3D(FVector(0.3f, 0.3f, 5.0f));
         }
 	}
 }
 
 void USoundWaveComponent::EmitOneSmallWaveTimed()
 {
-	FVector Offsets[3] = {FVector(0.0f, 0.0f, 0.0f), FVector(-50.0f, 0.0f, 50.0f ), FVector(50.0f, 0.0f, 80.0f )};
+	// FVector Offsets[3] = {FVector(0.0f, 0.0f, 0.0f), FVector(-50.0f, 0.0f, 50.0f ), FVector(50.0f, 0.0f, 80.0f )};
+	FVector Offsets[3] = {FVector(0.0f, 0.0f, 50.0f), FVector(0.0f, 0.0f, 50.0f), FVector(0.0f, 0.0f, 50.0f)};
 	if (SmallWaveCounter < 3)
 	{
 		EmitOneSmallWave(SmallWaveTargetLocation, Offsets[SmallWaveCounter]);
